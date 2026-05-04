@@ -1,0 +1,32 @@
+package com.cinefinder.model;
+
+import jakarta.persistence.*;
+import lombok.*;
+import java.time.LocalDateTime;
+
+@Entity @Table(name = "favoritos")
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+public class Favorito {
+
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "usuario_id", nullable = false)
+    private Usuario usuario;
+
+    /** ID do filme na API C# / TMDB (referência externa, sem FK local) */
+    @Column(name = "filme_id")
+    private Long filmeId;
+
+    /** ID da série na API C# / TMDB (referência externa, sem FK local) */
+    @Column(name = "serie_id")
+    private Long serieId;
+
+    @Column(nullable = false)
+    private LocalDateTime dataAdicionado;
+
+    @PrePersist
+    void prePersist() {
+        if (dataAdicionado == null) dataAdicionado = LocalDateTime.now();
+    }
+}

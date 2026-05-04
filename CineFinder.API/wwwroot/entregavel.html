@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CineFinder - Entregavel Reformulado</title>
+  <link rel="stylesheet" href="entregavel.css">
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <img src="cf/logo.png" alt="Logo CineFinder">
+      <div>
+        <h1>Cine<span>Finder</span></h1>
+        <p>Entregavel HTML/CSS com modelo Java reformulado</p>
+        <span class="badge">Versao atualizada - foco social + cinemas no mapa</span>
+      </div>
+    </header>
+
+    <div class="grid">
+      <section>
+        <h2>1. Entidades Reformuladas (API Java)</h2>
+        <p class="muted">Agora o banco Java persiste apenas o dominio social. O catalogo de conteudo ficou separado na API C#.</p>
+        <ul>
+          <li><strong>Usuario</strong>: cadastro e autenticacao (<code>nome</code>, <code>email</code>, <code>nickname</code>, <code>senhaHash</code>, <code>dataCadastro</code>).</li>
+          <li><strong>Avaliacao</strong>: feedback social com <code>nota</code>, <code>comentario</code>, <code>usuarioId</code> e referencia externa (<code>filmeId</code> ou <code>serieId</code>).</li>
+          <li><strong>Favorito</strong>: vinculo de usuario com conteudo externo via <code>filmeId</code> ou <code>serieId</code>.</li>
+          <li><strong>Post</strong>: timeline da comunidade com <code>conteudo</code>, <code>dataCriacao</code> e <code>dataEdicao</code>.</li>
+        </ul>
+        <p class="ok">Filme, Serie e Genero nao sao mais entidades JPA na API Java.</p>
+      </section>
+
+      <section>
+        <h2>2. Repositorios Atuais</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Entidade</th>
+              <th>Repositorio</th>
+              <th>Consultas especificas</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Usuario</td>
+              <td>UsuarioRepository</td>
+              <td>findByEmail, existsByEmail, existsByNickname</td>
+            </tr>
+            <tr>
+              <td>Avaliacao</td>
+              <td>AvaliacaoRepository</td>
+              <td>findByFilmeId, findBySerieId, findByUsuarioId</td>
+            </tr>
+            <tr>
+              <td>Favorito</td>
+              <td>FavoritoRepository</td>
+              <td>findByUsuarioId</td>
+            </tr>
+            <tr>
+              <td>Post</td>
+              <td>PostRepository</td>
+              <td>findByUsuarioId, findAllByOrderByDataCriacaoDesc(Pageable)</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>3. Controllers e Endpoints (modelo vigente)</h2>
+        <h3>3.1 Controllers sociais</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Controller</th>
+              <th>Rota base</th>
+              <th>Operacoes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>UsuarioController</td>
+              <td>/api/usuarios</td>
+              <td>CRUD completo + POST /login</td>
+            </tr>
+            <tr>
+              <td>AvaliacaoController</td>
+              <td>/api/avaliacoes</td>
+              <td>CRUD completo + filtros por filme, serie e usuario</td>
+            </tr>
+            <tr>
+              <td>FavoritoController</td>
+              <td>/api/favoritos</td>
+              <td>GET listar, GET por id, POST criar, DELETE remover, GET por usuario</td>
+            </tr>
+            <tr>
+              <td>PostController</td>
+              <td>/api/posts</td>
+              <td>CRUD completo + GET por usuario + feed principal ordenado desc</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>3.2 Controller agregador de cinemas</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Controller</th>
+              <th>Rota base</th>
+              <th>Endpoints</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>CinemaController</td>
+              <td>/api/cinemas</td>
+              <td>GET /proximos?lat=&amp;lng=&amp;raio= e GET /cidade?q=&amp;raio= (OpenStreetMap via Nominatim + Overpass)</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>4. import.sql no modelo novo</h2>
+        <p>O <strong>import.sql</strong> da API Java carrega somente dados sociais para testes imediatos:</p>
+        <ul>
+          <li>Usuarios de teste com senha hash BCrypt.</li>
+          <li>Avaliacoes com referencia externa de conteudo (<code>filmeId</code> e <code>serieId</code>).</li>
+          <li>Favoritos com referencia externa de conteudo.</li>
+          <li>Posts iniciais da comunidade.</li>
+        </ul>
+        <p class="footer-note">Conclusao: a arquitetura atual separa claramente conteudo (API C#) e social/geolocalizacao (API Java), mantendo o frontend integrado as duas APIs.</p>
+      </section>
+
+      <section>
+        <h2>5. APIs Externas Utilizadas</h2>
+        <p class="muted">O projeto utiliza APIs externas para enriquecer catalogo e geolocalizacao, sem acoplar esses dados ao banco Java.</p>
+        <table>
+          <thead>
+            <tr>
+              <th>API/Servico</th>
+              <th>Finalidade no projeto</th>
+              <th>Onde e utilizada</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>TMDB API</td>
+              <td>Busca de posters, backdrop, informacoes extras e catalogo complementar de filmes/series.</td>
+              <td>Frontend (camada JS de integracao com chave TMDB).</td>
+            </tr>
+            <tr>
+              <td>Nominatim (OpenStreetMap)</td>
+              <td>Geocodificacao de cidade para latitude/longitude na busca de cinemas por local.</td>
+              <td>API Java em <code>/api/cinemas/cidade</code> e fallback no frontend.</td>
+            </tr>
+            <tr>
+              <td>Overpass API (OpenStreetMap)</td>
+              <td>Consulta de pontos com <code>amenity=cinema</code> por coordenada e raio.</td>
+              <td>API Java em <code>/api/cinemas/proximos</code>/<code>/api/cinemas/cidade</code> e fallback no frontend.</td>
+            </tr>
+            <tr>
+              <td>Leaflet + OpenStreetMap Tiles</td>
+              <td>Renderizacao do mapa interativo e marcadores de cinemas na tela.</td>
+              <td>Frontend na rota <code>#cinemas</code>.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

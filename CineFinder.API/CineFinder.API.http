@@ -1,0 +1,13 @@
+@CineFinder.API_HostAddress = http://localhost:5004
+
+#if (EnableOpenAPI)
+GET {{CineFinder.API_HostAddress}}/openapi/v1.json
+Accept: application/json
+
+###
+#endif
+
+GET {{CineFinder.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

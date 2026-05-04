@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CineFinder</title>
+  <link rel="icon" href="cf/logo.png" type="image/png">
+  <link rel="shortcut icon" href="cf/logo.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="cf/cinefinder.css">
+  <!-- Leaflet.js (mapa cinemas) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+  <a href="#home" class="brand"><img src="cf/logo.png" class="brand-logo" alt="CineFinder Logo"> CineFinder</a>
+  <form class="search-form" id="search-form">
+    <input type="text" id="search-input" placeholder="Buscar filmes ou series..." autocomplete="off">
+    <button type="submit">&#128269;</button>
+    <div class="search-results" id="search-results"></div>
+  </form>
+  <div class="nav-links">
+    <a href="#filmes">Filmes</a>
+    <a href="#series">Series</a>
+    <a href="#cinemas">Cinemas</a>
+    <a href="#comunidade">Comunidade</a>
+    <span id="nav-auth"></span>
+  </div>
+</nav>
+
+<div id="tmdb-banner" class="tmdb-banner" style="display:none">
+  Configure sua chave TMDB em <code>cf/config.js</code> para ver posteres reais.
+  <button onclick="document.getElementById('tmdb-banner').style.display='none'">x</button>
+</div>
+
+<main id="app"></main>
+
+<script src="cf/config.js"></script>
+<script src="cf/api.js"></script>
+<script src="cf/auth.js"></script>
+<script src="cf/app.js"></script>
+</body>
+</html>

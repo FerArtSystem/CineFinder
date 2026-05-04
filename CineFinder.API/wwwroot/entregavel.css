@@ -1,0 +1,170 @@
+:root {
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --surface-2: #fffdf7;
+  --text: #111111;
+  --muted: #5f6368;
+  --line: #e5e7eb;
+  --brand: #f5c542;
+  --brand-2: #e7ae10;
+  --ok: #0f7a43;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.55;
+}
+
+.page {
+  width: min(1120px, 94vw);
+  margin: 26px auto 50px;
+}
+
+.hero {
+  background: linear-gradient(135deg, #fff8df, #fffef6);
+  border: 1px solid #f1df9f;
+  border-radius: 18px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.hero img {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  border-radius: 14px;
+  background: #ffffff;
+  border: 1px solid #ead48f;
+  padding: 6px;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: -0.6px;
+}
+
+.hero h1 span {
+  color: var(--brand);
+}
+
+.hero p {
+  margin: 4px 0 0;
+  color: #7b651f;
+}
+
+.badge {
+  margin-top: 8px;
+  display: inline-block;
+  background: #fff6d7;
+  color: #6f5500;
+  border: 1px solid #f2da93;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+section {
+  background: linear-gradient(180deg, var(--surface-2), var(--surface));
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 18px;
+}
+
+h2 {
+  margin: 0 0 10px;
+  font-size: 21px;
+  color: var(--brand);
+}
+
+h3 {
+  margin: 14px 0 8px;
+  font-size: 16px;
+}
+
+p {
+  margin: 8px 0;
+}
+
+ul {
+  margin: 8px 0;
+  padding-left: 20px;
+}
+
+li {
+  margin: 6px 0;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.ok {
+  color: var(--ok);
+  font-weight: 700;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+th,
+td {
+  border: 1px solid var(--line);
+  padding: 10px;
+  text-align: left;
+  vertical-align: top;
+  font-size: 14px;
+}
+
+th {
+  background: #fff4cf;
+  color: #5f4a00;
+}
+
+code {
+  background: #f7f7f8;
+  border: 1px solid #e4e5e8;
+  color: #1f2937;
+  border-radius: 8px;
+  padding: 2px 6px;
+}
+
+.footer-note {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+@media (max-width: 760px) {
+  .hero h1 {
+    font-size: 28px;
+  }
+
+  th,
+  td {
+    font-size: 13px;
+  }
+}
