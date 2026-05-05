@@ -64,6 +64,27 @@ function esc(str) {
   const s = fixMojibake(str);
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
+function getApiErrorMessage(error, fallback) {
+  const raw = (error && error.message ? String(error.message) : '').trim();
+  if (!raw) return fallback;
+
+  // Erros vindos da API C# geralmente chegam como JSON em texto.
+  try {
+    const parsed = JSON.parse(raw);
+    const msg = parsed?.message ? String(parsed.message) : '';
+    return msg || fallback;
+  } catch {
+    if (raw.includes('Failed to fetch')) {
+      return 'Falha de conexão com a API. Verifique se C# (5004) e Java (8080) estão rodando.';
+    }
+    // Tenta extrair mensagem de JSONs inline (ex: {"message":"E-mail já em uso."})
+    try {
+      const inner = JSON.parse(raw.replace(/^[^{]*/, ''));
+      if (inner?.message) return String(inner.message);
+    } catch { /* ignora */ }
+    return raw;
+  }
+}
 
 function showToast(msg, type = 'success') {
   const t = document.createElement('div');
@@ -517,7 +538,10 @@ async function doLogin() {
     const u = await Api.login({ email, senha });
     Auth.salvar(u);
     navigateTo('home');
-  } catch { err.textContent = 'E-mail ou senha inválidos.'; err.style.display = 'block'; }
+  } catch (e) {
+    err.textContent = getApiErrorMessage(e, 'E-mail ou senha inválidos.');
+    err.style.display = 'block';
+  }
 }
 
 function renderCadastro() {
@@ -550,7 +574,10 @@ async function doCadastro() {
     ok.textContent = 'Conta criada! Redirecionando para o login...';
     ok.style.display = 'block';
     setTimeout(() => navigateTo('login'), 2000);
-  } catch { err.textContent = 'Erro: e-mail ou nickname já em uso.'; err.style.display = 'block'; }
+  } catch (e) {
+    err.textContent = getApiErrorMessage(e, 'Erro ao criar conta.');
+    err.style.display = 'block';
+  }
 }
 
 // ── COMUNIDADE ─────────────────────────────────────────────

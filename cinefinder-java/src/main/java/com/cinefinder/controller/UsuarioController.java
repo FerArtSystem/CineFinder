@@ -2,7 +2,6 @@ package com.cinefinder.controller;
 
 import com.cinefinder.model.Usuario;
 import com.cinefinder.repository.UsuarioRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -12,11 +11,15 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/api/usuarios")
-@RequiredArgsConstructor
 public class UsuarioController {
 
     private final UsuarioRepository repo;
     private final PasswordEncoder encoder;
+
+    public UsuarioController(UsuarioRepository repo, PasswordEncoder encoder) {
+        this.repo = repo;
+        this.encoder = encoder;
+    }
 
     @GetMapping
     public List<Map<String,Object>> listar() {
@@ -69,7 +72,7 @@ public class UsuarioController {
                 .filter(u -> encoder.matches(body.get("senha"), u.getSenhaHash()))
                 .map(u -> ResponseEntity.ok(toMap(u)))
                 .orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                        .body((Map<String,Object>) Map.of("message","Credenciais inválidas")));
+                .body(Map.<String, Object>of("message", "Credenciais inválidas")));
     }
 
     private Map<String,Object> toMap(Usuario u) {

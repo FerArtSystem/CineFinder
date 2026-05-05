@@ -41,16 +41,13 @@ public class JavaApiService : IJavaApiService
 
     private async Task<T?> PostAsync<T>(string path, object body)
     {
-        try
+        var response = await _http.PostAsJsonAsync(path, body);
+        if (!response.IsSuccessStatusCode)
         {
-            var response = await _http.PostAsJsonAsync(path, body);
-            if (!response.IsSuccessStatusCode) return default;
-            return await response.Content.ReadFromJsonAsync<T>(_jsonOpts);
+            var errorBody = await response.Content.ReadAsStringAsync();
+            throw new HttpRequestException(errorBody, null, response.StatusCode);
         }
-        catch
-        {
-            return default;
-        }
+        return await response.Content.ReadFromJsonAsync<T>(_jsonOpts);
     }
 
     private async Task<T?> PutAsync<T>(string path, object body)

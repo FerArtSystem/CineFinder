@@ -2,7 +2,6 @@ package com.cinefinder.controller;
 
 import com.cinefinder.model.*;
 import com.cinefinder.repository.*;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -12,11 +11,15 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/api/posts")
-@RequiredArgsConstructor
 public class PostController {
 
     private final PostRepository repo;
     private final UsuarioRepository usuarioRepo;
+
+    public PostController(PostRepository repo, UsuarioRepository usuarioRepo) {
+        this.repo = repo;
+        this.usuarioRepo = usuarioRepo;
+    }
 
     @GetMapping
     public List<Map<String,Object>> listar() {

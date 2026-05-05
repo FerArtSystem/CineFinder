@@ -1,11 +1,9 @@
 package com.cinefinder.model;
 
 import jakarta.persistence.*;
-import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity @Table(name = "favoritos")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class Favorito {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,6 +22,49 @@ public class Favorito {
 
     @Column(nullable = false)
     private LocalDateTime dataAdicionado;
+
+    public Favorito() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    public Long getFilmeId() {
+        return filmeId;
+    }
+
+    public void setFilmeId(Long filmeId) {
+        this.filmeId = filmeId;
+    }
+
+    public Long getSerieId() {
+        return serieId;
+    }
+
+    public void setSerieId(Long serieId) {
+        this.serieId = serieId;
+    }
+
+    public LocalDateTime getDataAdicionado() {
+        return dataAdicionado;
+    }
+
+    public void setDataAdicionado(LocalDateTime dataAdicionado) {
+        this.dataAdicionado = dataAdicionado;
+    }
 
     @PrePersist
     void prePersist() {

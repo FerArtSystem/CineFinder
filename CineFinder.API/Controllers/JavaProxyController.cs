@@ -43,8 +43,15 @@ public class JavaProxyController : ControllerBase
     [HttpPost("usuarios")]
     public async Task<ActionResult<UsuarioResponseDto>> CreateUsuario([FromBody] object body)
     {
-        var result = await _java.CreateUsuarioAsync(body);
-        return result is null ? BadRequest(new { message = "Erro ao criar usuário na API Java." }) : Ok(result);
+        try
+        {
+            var result = await _java.CreateUsuarioAsync(body);
+            return result is null ? BadRequest(new { message = "Erro ao criar usuário na API Java." }) : Ok(result);
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode.HasValue)
+        {
+            return StatusCode((int)ex.StatusCode.Value, ex.Message);
+        }
     }
 
     /// <summary>Atualiza usuário (via Java API).</summary>
@@ -67,10 +74,15 @@ public class JavaProxyController : ControllerBase
     [HttpPost("usuarios/login")]
     public async Task<ActionResult<UsuarioResponseDto>> Login([FromBody] object body)
     {
-        var result = await _java.LoginAsync(body);
-        return result is null
-            ? Unauthorized(new { message = "Credenciais inválidas (Java API)." })
-            : Ok(result);
+        try
+        {
+            var result = await _java.LoginAsync(body);
+            return result is null ? Unauthorized(new { message = "Credenciais inválidas (Java API)." }) : Ok(result);
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode.HasValue)
+        {
+            return StatusCode((int)ex.StatusCode.Value, ex.Message);
+        }
     }
 
     // ────────────────────────────────────────────────────────────────
